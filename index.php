@@ -2,8 +2,6 @@
 
 require_once realpath("vendor/autoload.php");
 require_once "config.php";
+require_once "src/router.php";
 
-use app\controllers\Members as MemberController;
-
-$memberController = new MemberController();
-$memberController->showUser();
+?>

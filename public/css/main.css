@@ -1,0 +1,45 @@
+body {
+  font-family: sans-serif;
+}
+
+.app-nav {
+
+}
+
+.app-nav-wrapper {
+  list-style: none;
+  padding: 0;
+  margin: 32px auto;
+  text-align: center;
+}
+
+.app-nav-link a {
+  text-decoration: none;
+  font-size: 1.4rem;
+  color: #333 !important;
+}
+
+.app-nav-link a:hover {
+  color: #2986f1ec !important;
+}
+
+
+.app-home {
+  margin: 0 auto;
+  padding: 3rem;
+  text-align: center;
+}
+
+.app-manage-members {
+  margin: 0 auto;
+  max-width: 600px;
+  padding: 3rem;
+}
+
+.app-members-table {
+}
+
+.table-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
