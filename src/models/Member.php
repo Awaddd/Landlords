@@ -41,10 +41,10 @@ class Member extends Database {
     $stmt->execute([$id]);
   }
 
-  public function editMember($id, $first_name, $last_name) {
-    $query = "UPDATE members SET first_name = ?, last_name = ? WHERE id = ?";
+  public function editMember($id, $first_name, $last_name, $expiry_date) {
+    $query = "UPDATE members SET first_name = ?, last_name = ?, expiry_date = ? WHERE id = ?";
     $stmt = $this->connect()->prepare($query);
-    $stmt->execute([$first_name, $last_name, $id]);
+    $stmt->execute([$first_name, $last_name, $expiry_date, $id]);
   }
 
 }

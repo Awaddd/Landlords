@@ -37,3 +37,13 @@
   margin-top: 25px;
 }
 
+.member-form {
+  display: grid;
+  grid-gap: 15px;
+}
+
+.member-form-input {
+  display: grid;
+  grid-gap: 5px;
+}
+

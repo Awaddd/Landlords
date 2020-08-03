@@ -34,9 +34,14 @@ body {
   cursor: pointer;
 }
 
-input[type=text] {
-  padding: 4px 9px;
+input[type=text], input[type=date] {
+  padding: 8px !important;
 }
+
+.btn {
+  padding: 0.4rem 1rem;
+}
+
 
 .page-title {
   color: #333;

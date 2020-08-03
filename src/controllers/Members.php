@@ -17,13 +17,15 @@ class Members {
       if (isset($post['submit'])){
         $first_name = ucwords(strtolower($post['first_name']));
         $last_name = ucwords(strtolower($post['last_name']));
-        $MemberModel->setMember($first_name, $last_name, '2020-08-06 00:00:00');
+        $expiry_date = $post['expiry_date'];
+        $MemberModel->setMember($first_name, $last_name, $expiry_date);
       } 
 
       if (isset($post['edit'])){
         $first_name = ucwords(strtolower($post['first_name']));
         $last_name = ucwords(strtolower($post['last_name']));
-        $MemberModel->editMember($_POST['edit_id'], $first_name, $last_name);
+        $expiry_date = $post['expiry_date'];
+        $MemberModel->editMember($_POST['edit_id'], $first_name, $last_name, $expiry_date);
       }
 
       if (isset($post['delete'])){
