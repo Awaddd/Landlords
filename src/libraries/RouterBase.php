@@ -16,7 +16,6 @@ class RouterBase {
     }
 
     if ($url == $route) {
-      $isValid = true;
       $callback->__invoke();
     } 
 

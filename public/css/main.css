@@ -34,7 +34,7 @@ body {
   cursor: pointer;
 }
 
-input[type=text], input[type=date] {
+input[type=text], input[type=date], input[type=password] {
   padding: 8px !important;
 }
 
@@ -42,8 +42,17 @@ input[type=text], input[type=date] {
   padding: 0.4rem 1rem;
 }
 
-
 .page-title {
   color: #333;
   font-weight: 400 !important;
+}
+
+.form {
+  display: grid;
+  grid-gap: 15px;
+}
+
+.form-input {
+  display: grid;
+  grid-gap: 5px;
 }
