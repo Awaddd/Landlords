@@ -24,6 +24,10 @@
     <p>Have an account? <a href="<?= URLROOT . '/login' ?>">Login</a></p>
 
   </form>
+
+  <?php if(isset($data['errorMessage'])): ?>
+  <p style="color: red;"><?= $data['errorMessage'] ?></p>
+  <?php endif; ?>
 </section>
 
 <?php require_once APPROOT . '/views/inc/footer.php'; ?>

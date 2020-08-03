@@ -19,6 +19,7 @@
           <!-- <a href="<?= URLROOT . '/members' ?>">Members</a> -->
           <a href="<?= URLROOT . '/login' ?>">Login|</a>
           <a href="<?= URLROOT . '/register' ?>">Register</a>
+          <a href="<?= URLROOT . '/logout' ?>">Logout</a>
         </li>
       </ul>
     </nav>

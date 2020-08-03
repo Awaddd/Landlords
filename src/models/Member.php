@@ -14,10 +14,10 @@ class Member extends Database {
 
   public function getMembersWithCountCheck() {
     $id = 2;
-    $first_name = "Alex";
+    $firstName = "Alex";
 
     $stmt = $this->connect()->prepare("SELECT * FROM members WHERE id = ? AND first_name = ?");
-    $stmt->execute([$id, $first_name]);
+    $stmt->execute([$id, $firstName]);
 
     if ($stmt->rowCount()) {
       $row = $stmt->fetch();
@@ -26,13 +26,13 @@ class Member extends Database {
   
   }
 
-  public function setMember($first_name, $last_name, $expiry_date) {
+  public function setMember($firstName, $lastName, $expiryDate) {
     $query = "INSERT INTO 
     members(first_name, last_name, expiry_date) 
     VALUES (?, ?, ?)";
 
     $stmt = $this->connect()->prepare($query);
-    $stmt->execute([$first_name, $last_name, $expiry_date]);
+    $stmt->execute([$firstName, $lastName, $expiryDate]);
   }
 
   public function deleteMember($id) {
@@ -41,10 +41,10 @@ class Member extends Database {
     $stmt->execute([$id]);
   }
 
-  public function editMember($id, $first_name, $last_name, $expiry_date) {
+  public function editMember($id, $firstName, $lastName, $expiryDate) {
     $query = "UPDATE members SET first_name = ?, last_name = ?, expiry_date = ? WHERE id = ?";
     $stmt = $this->connect()->prepare($query);
-    $stmt->execute([$first_name, $last_name, $expiry_date, $id]);
+    $stmt->execute([$firstName, $lastName, $expiryDate, $id]);
   }
 
 }

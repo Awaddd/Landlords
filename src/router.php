@@ -11,7 +11,7 @@ RouterBase::set('', function() {
 
 RouterBase::set('members', function() {
   $memberController = new MemberController();
-  $memberController->showUser();
+  $memberController->index();
 });
 
 RouterBase::set('register', function() {
@@ -24,3 +24,7 @@ RouterBase::set('login', function() {
   $userController->login();
 });
 
+RouterBase::set('logout', function() {
+  $userController = new UserController();
+  $userController->logout();
+});
