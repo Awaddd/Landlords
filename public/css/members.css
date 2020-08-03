@@ -2,9 +2,22 @@
   display: none;
 }
 
+#edit-member-form, #add-member-form {
+  margin-top: 1rem;
+}
+
+.app-manage-members {
+  margin: 0 auto;
+  max-width: 800px;
+  padding: 1.5rem;
+}
+
+.app-members-table {
+  margin-top: 25px;
+}
+
 .table-row {
   display: grid;
-  grid-template-columns: 1fr 3fr;
   margin: 0.1rem 0;
   align-items: center;
 }
@@ -15,12 +28,12 @@
   grid-gap: 15px;
 }
 
-.btn {
-  padding: 3px 9px;
-  cursor: pointer;
+.table-row {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
 }
 
-input[type=text] {
-  padding: 4px 9px;
-  
+.form-actions {
+  margin-top: 25px;
 }
+

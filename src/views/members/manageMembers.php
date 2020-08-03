@@ -1,16 +1,27 @@
 <?php require_once APPROOT . '/views/inc/header.php'; ?>
 
 <section class="app-manage-members">
+  <h2 class="page-title">Manage Members</h2> 
   
-  <h1>Hi <?= $data["user"] ?></h1>
-  <h2>Manage Members</h2> 
-
   <div class="app-members-table">
+    <div class="table-row">
+      <p class="table-head table-column">ID</p>
+      <p class="table-head table-column">First name</p>
+      <p class="table-head table-column">Last name</p>
+      <p class="table-head table-column">Expiry Date</p>
+    </div>
   <?php 
     $array = array(); 
     foreach ($data["members"] as $member): ?>
+      <?php if($data["members"]): ?>
+      <?php $date = new DateTime($member->expiry_date); ?>
+      <?php endif; ?>
       <div class="table-row">
-        <p><?= $member->id . ": " . $member->first_name . " " . $member->last_name ?></p>
+      
+        <p class="table-column"><?= $member->id ?></p>
+        <p class="table-column"><?= $member->first_name ?></p>
+        <p class="table-column"><?= $member->last_name ?></p>
+        <p class="table-column"><?= $date->format('d-m-Y') ?></p>
 
         <div class="table-actions">
 
@@ -34,36 +45,36 @@
     <?php endforeach; ?>
     </div>
 
-      <h2>Add Member</h2>
-      <button class="btn" id="add-member-btn">New</button>
-      <br><br>
 
-      <!-- ADD "modal" -->
+<!-- ADD "modal" -->
 
-      <form id="add-member-form" method="post" action="<?php $_SERVER['PHP_SELF']; ?>">
-        <input type="text" placeholder="First Name" name="first_name">
-        <input type="text" placeholder="Last Name" name="last_name">
-        <input type="hidden" value="2020-08-06 00:00:00">
+  <div class="form-actions">
+  <button class="btn" id="add-member-btn">New</button>
+  <form id="add-member-form" method="post" action="<?php $_SERVER['PHP_SELF']; ?>">
+    <input type="text" placeholder="First Name" name="first_name">
+    <input type="text" placeholder="Last Name" name="last_name">
+    <input type="hidden" value="2020-08-06 00:00:00">
 
-        <input class="btn" type="submit" name="submit" value="Add">
+    <input class="btn" type="submit" name="submit" value="Add">
+    <button class="btn" id="cancel-edit-member" name="cancel">Cancel</button>
+  </form>
+
+  <!-- Edit "modal" -->
+
+  <?php 
+    if (isset($_POST['openEdit'])) : 
+      $i = $_POST['edit_index']; ?>
+
+      <form class="edit" id="edit-member-form" method="post" action="<?php $_SERVER['PHP_SELF']; ?>">
+        <input type="text" placeholder="First Name" name="first_name" value="<?= $array[$i]->first_name ?>">
+        <input type="text" placeholder="Last Name" name="last_name" value="<?= $array[$i]->last_name ?>">
+        <input name="edit_id" type="hidden" value="<?= $array[$i]->id ?>">
+
+        <input class="btn" type="submit" name="edit" value="Update">
         <button class="btn" id="cancel-edit-member" name="cancel">Cancel</button>
       </form>
-
-      <!-- Edit "modal" -->
-
-      <?php 
-        if (isset($_POST['openEdit'])) : 
-          $i = $_POST['edit_index']; ?>
-
-          <form class="edit" id="edit-member-form" method="post" action="<?php $_SERVER['PHP_SELF']; ?>">
-            <input type="text" placeholder="First Name" name="first_name" value="<?= $array[$i]->first_name ?>">
-            <input type="text" placeholder="Last Name" name="last_name" value="<?= $array[$i]->last_name ?>">
-            <input name="edit_id" type="hidden" value="<?= $array[$i]->id ?>">
-
-            <input class="btn" type="submit" name="edit" value="Update">
-            <button class="btn" id="cancel-edit-member" name="cancel">Cancel</button>
-          </form>
-      <?php endif; ?>
+  <?php endif; ?>
+  </div>
 
 </section>
 <?php require_once APPROOT . '/views/inc/footer.php'; ?>
