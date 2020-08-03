@@ -5,6 +5,8 @@ use app\controllers\Home as HomeController;
 use app\controllers\Members as MemberController;
 use app\controllers\User as UserController;
 
+RouterBase::setRoutes(['', 'members', 'register', 'login', 'logout']);
+
 RouterBase::set('', function() {
   $homeController = new HomeController();
 });
@@ -28,3 +30,5 @@ RouterBase::set('logout', function() {
   $userController = new UserController();
   $userController->logout();
 });
+
+
