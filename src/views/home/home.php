@@ -1,4 +1,5 @@
 <?php require_once APPROOT . '/views/inc/header.php'; ?>
+<?php require_once APPROOT . '/views/inc/nav.php'; ?>
 
 <section class="app-home">
   <h1>Welcome to the landlords app</h1>

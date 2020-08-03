@@ -11,11 +11,16 @@ class RouterBase {
   }
 
   public static function set($route, $callback) {
-    // self::$validRoutes[] = $route;
     $url = '';
 
     if (isset($_GET['url'])){
+      
       $url = $_GET['url'];
+
+      if (!in_array($_GET['url'], self::$validRoutes)) {
+        require_once APPROOT . '/views/other/notFound.php';
+      }
+
     }
 
     if ($url == $route) {
@@ -25,12 +30,5 @@ class RouterBase {
       header("Location: " . URLROOT . '/' . $route);
     }
     
-    if (isset($_GET['url'])) { 
-      if (!in_array($_GET['url'], self::$validRoutes)) {
-        require_once APPROOT . '/views/other/notFound.php';
-      }
-    }
-
-
   }
 }

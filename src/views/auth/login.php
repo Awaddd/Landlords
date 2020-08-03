@@ -1,4 +1,5 @@
 <?php require_once APPROOT . '/views/inc/header.php'; ?>
+<?php require_once APPROOT . '/views/inc/nav.php'; ?>
 
 <section class="app-auth">
   <h1>Login</h1>
