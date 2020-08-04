@@ -15,6 +15,7 @@
     <!-- show members -->
     <?php require_once APPROOT . '/views/members/showMembers.php'; ?>
 
+    <p>Current page: <?= $_SESSION['currentPage'] ?></p>
   </div>
 
   <?php if(isset($data['errorMessage'])): ?>

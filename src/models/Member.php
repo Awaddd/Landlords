@@ -9,21 +9,7 @@ class Member extends Database {
     $stmt = $this->connect()->query("SELECT * FROM members");
 
     $row = $stmt->fetchAll();
-    return $row;
-  }
-
-  public function getMembersWithCountCheck() {
-    $id = 2;
-    $firstName = "Alex";
-
-    $stmt = $this->connect()->prepare("SELECT * FROM members WHERE id = ? AND first_name = ?");
-    $stmt->execute([$id, $firstName]);
-
-    if ($stmt->rowCount()) {
-      $row = $stmt->fetch();
-      return $row; 
-    }
-  
+    return array($row, $stmt->rowCount());
   }
 
   public function setMember($firstName, $lastName, $expiryDate) {

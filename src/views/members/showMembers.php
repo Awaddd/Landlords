@@ -1,8 +1,11 @@
 <?php 
 $array = array(); 
 
-foreach ($data["members"] as $member): 
+
+for ($i = $_SESSION['firstRow']; $i < $_SESSION['lastRow']; $i++) :   
+  
   if($data["members"]) {
+    $member = $data['members'][$i];
     $date = new DateTime($member->expiry_date);
   } ?>
 
@@ -19,12 +22,12 @@ foreach ($data["members"] as $member):
         array_push($array, $member);
         $currentIndex = array_search($member, $array);
       ?>
-      <form method="post" action="<?php $_SERVER['PHP_SELF']; ?>">
+      <form method="post" action="<?php htmlentities($_SERVER['PHP_SELF']); ?>">
         <input name="edit_index" type="hidden" value="<?= $currentIndex ?>">
         <input class="btn" type="submit" name="openEdit" value="Edit">
       </form>
 
-      <form method="post" action="<?php $_SERVER['PHP_SELF']; ?>">
+      <form method="post" action="<?php htmlentities($_SERVER['PHP_SELF']); ?>">
         <input name="delete_id" type="hidden" value="<?= $member->id ?>">
         <input class="btn" type="submit" name="delete" value="Delete">
       </form>
@@ -32,4 +35,11 @@ foreach ($data["members"] as $member):
     </div>
   </div>
 
-<?php endforeach; ?>
+<?php endfor; ?>
+
+  <form method="post" action="<?php htmlentities($_SERVER['PHP_SELF']); ?>">
+    <input class="btn" type="submit" value="Previous" name="prev_page">
+  </form>
+  <form method="post" action="<?php htmlentities($_SERVER['PHP_SELF']); ?>">
+    <input class="btn" type="submit" value="Next" name="next_page">
+  </form>
