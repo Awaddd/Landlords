@@ -5,7 +5,8 @@ use app\controllers\Home as HomeController;
 use app\controllers\Members as MemberController;
 use app\controllers\User as UserController;
 
-RouterBase::setRoutes(['', 'members', 'register', 'login', 'logout']);
+RouterBase::setRoutes(['', 'register', 'login', 'logout']);
+RouterBase::setProtectedRoutes(['members']);
 
 RouterBase::set('', function() {
   $homeController = new HomeController();
