@@ -98,7 +98,7 @@ class User {
       return "Password cannot be blank";
     } 
     if (!isset($user)) {
-      return "Username not registered";
+      return "User does not exist";
     } 
     if (!password_verify($password, $user->password)) {
       return "Incorrect password";

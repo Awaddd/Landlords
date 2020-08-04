@@ -17,6 +17,11 @@
 
   </div>
 
+  <?php if(isset($data['errorMessage'])): ?>
+  <p style="color: red;"><?= $data['errorMessage'] ?></p>
+  <?php endif; ?>
+  
+
   <div class="form-actions">
     <button class="btn" id="add-member-btn">New</button>
     <!-- ADD -->

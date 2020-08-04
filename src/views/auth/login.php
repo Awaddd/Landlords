@@ -4,7 +4,7 @@
 <section class="app-auth">
   <h1>Login</h1>
 
-  <form class="form" action="<?php $_SERVER['PHP_SELF'];?>" method="post">
+  <form class="form" action="<?php htmlentities($_SERVER['PHP_SELF']); ?>" method="post">
 
     <div class="form-input">
       <label for="username">Username</label>

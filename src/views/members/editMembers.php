@@ -2,7 +2,7 @@
 if (isset($_POST['openEdit'])) : 
   $i = $_POST['edit_index']; ?>
 
-  <form class="form" id="edit-member-form" method="post" action="<?php $_SERVER['PHP_SELF']; ?>">
+  <form class="form" id="edit-member-form" method="post" action="<?php htmlentities($_SERVER['PHP_SELF']); ?>">
     <div class="form-input">
       <label for="first_name">First name</label>
       <input type="text" placeholder="First Name" name="first_name" value="<?= $array[$i]->first_name ?>">

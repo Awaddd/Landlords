@@ -1,4 +1,4 @@
-<form class="form" id="add-member-form" method="post" action="<?php $_SERVER['PHP_SELF']; ?>">
+<form class="form" id="add-member-form" method="post" action="<?php htmlentities($_SERVER['PHP_SELF']); ?>">
   <div class="form-input">
     <label for="first_name">First name</label>
     <input type="text" placeholder="First Name" name="first_name">
@@ -14,6 +14,6 @@
     <input type="date" name="expiry_date" value="<?= date('Y-m-d', strtotime("+1 year")); ?>">
   </div>
 
-  <input class="btn" type="submit" name="submit" value="Add">
+  <input class="btn" type="submit" name="add" value="Add">
   <button class="btn" id="cancel-add-member" name="cancel">Cancel</button>
 </form>
