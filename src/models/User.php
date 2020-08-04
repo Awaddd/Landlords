@@ -17,7 +17,7 @@ class User extends Database{
   }
 
   public function getUser($username) {
-    $query = "SELECT id, username FROM users WHERE username = ?";
+    $query = "SELECT id, username, password FROM users WHERE username = ?";
     $stmt = $this->connect()->prepare($query);
     $stmt->execute([$username]);
 

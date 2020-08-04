@@ -21,6 +21,10 @@
 
   </form>
 
+  <?php if(isset($data['errorMessage'])): ?>
+  <p style="color: red;"><?= $data['errorMessage'] ?></p>
+  <?php endif; ?>
+
 </section>
 
 <?php require_once APPROOT . '/views/inc/footer.php'; ?>
