@@ -31,30 +31,46 @@ class Members {
     $data["members"] = $rowAndCount[0];
     $totalRows = $rowAndCount[1];
 
-    $data["totalRows"] = $totalRows;
+    // $data["totalRows"] = $totalRows;
     $data['numPerPage'] = 5;
     $data['totalPages'] = ceil($totalRows / $data['numPerPage']);
+    // $data['totalRows'] = $totalRows;
 
-    if (empty($data['firstRow'])) {
-      $data['firstRow'] = 0;
+    $_SESSION['totalRows'] = $totalRows;
+
+    if (!isset($_SESSION['currentPage'])) {
+      $_SESSION['currentPage'] = 1;
+    }
+    if (!isset($_SESSION['firstRow'])) {
+      $_SESSION['firstRow'] = 0;
+    }
+    if (!isset($_SESSION['lastRow'])) {
+      if ($totalRows <= $data['numPerPage']) {
+        $_SESSION['lastRow'] = $totalRows;
+      } else {
+        $_SESSION['lastRow'] = 5;
+      }
     }
 
-    if (empty($data['lastRow'])) {
-      $data['lastRow'] = 5;
+    $_SESSION['sum'] = $data['totalPages'] * $data['numPerPage'];
+
+
+    if (!isset($_SESSION['lastPage'])) {
+      $_SESSION['lastPage'] = $data['totalPages']; 
     }
+    // if (!isset($_SESSION['totalRows'])) {
+    //   $_SESSION["totalRows"] = $totalRows;
+    // }
+
 
     if (isset($post['next_page'])){
-
-      // $data['firstRow'] += $data['numPerPage'];
-      // $data['lastRow'] += $data['numPerPage'];
       
       $_SESSION['currentPage']++;
 
 
       if ($_SESSION['currentPage'] == $data['totalPages']) {
         $_SESSION['firstRow'] += $data['numPerPage'];
-        $_SESSION['lastRow'] = $data['totalRows'];
-        $reachedTheEnd = true;
+        $_SESSION['lastRow'] = $_SESSION['totalRows'];
         echo '<p style="color: red;">THE END!</p>';
         
       } elseif ($_SESSION['currentPage'] < $data['totalPages']) {
@@ -87,15 +103,13 @@ class Members {
 
     if (isset($post['prev_page'])){
 
-      $sum = $data['totalPages'] * $data['numPerPage'];
-
       if ($_SESSION['firstRow'] != 0 && $_SESSION['lastRow'] != 5) {
         // $data['firstRow'] -= $data['numPerPage'];
         // $data['lastRow'] -= $data['numPerPage'];
         
         if ($_SESSION['currentPage'] == $data['totalPages']) {
           $_SESSION['firstRow'] -= $data['numPerPage'];
-          $_SESSION['lastRow'] = $sum;
+          $_SESSION['lastRow'] = $_SESSION['sum'];
           $_SESSION['lastRow'] -= $data['numPerPage'];
           $_SESSION['currentPage']--;
           echo '<p style="color: blue;">THE BLUE END!</p>';
@@ -144,6 +158,44 @@ class Members {
       return $errorMessage;
     } else {
       $this->memberModel->setMember($firstName, $lastName, $expiryDate);
+      $_SESSION['totalRows'] += 1;
+      // $_SESSION['currentPage'] = 1;
+      echo $_SESSION['totalRows'] . " /";
+      echo $_SESSION['lastRow'];
+      echo '<p><strong>Sum: '.$_SESSION['sum'].'</strong></p>';
+
+      if ($_SESSION['currentPage'] == $_SESSION['lastPage']) {
+        echo 'WHY AM I NOT RUNNING';
+        echo '<p style="color: lightblue">total rows: ' . $_SESSION['totalRows'] . ', Sum: ' . $_SESSION['sum'] . '</p>';
+        
+        
+        $_SESSION['sum'] = $_SESSION['lastPage'] * 5;
+
+
+        if ($_SESSION['totalRows'] > $_SESSION['sum']) {
+          echo '<p style="color: red;"> First CONDI SUM </p>';
+          // $_SESSION['firstRow'] += $data['numPerPage'];
+          $_SESSION['firstRow'] += 5;
+          $_SESSION['lastRow'] = $_SESSION['totalRows'];
+          $_SESSION['currentPage']++;
+          $_SESSION['lastPage']++;
+
+          
+        } elseif ($_SESSION['totalRows'] > $_SESSION['lastRow']) {
+          echo '<p style="color: green;"> SECOND CONDI </p>';
+          $_SESSION['lastRow'] = $_SESSION['totalRows'];
+        }
+        
+        echo '<p>Total Rows after add: '. $_SESSION['totalRows'] .'</p>';
+      }
+
+      echo "and after: ";
+      echo $_SESSION['totalRows'] . " /";
+      echo $_SESSION['lastRow'];
+      echo '<p><strong>Sum: '.$_SESSION['sum'].'</strong></p>';
+      echo '<p><strong>Current page: : '.$_SESSION['lastPage'].'</strong></p>';
+      echo '<p><strong>Last page: : '.$_SESSION['lastPage'].'</strong></p>';
+
     }
   }
 
@@ -165,6 +217,8 @@ class Members {
 
   public function deleteMember($id) {
     $this->memberModel->deleteMember($id);
+    // $data["totalRows"] -= 1;
+    $this->setPaginationDefaults();
   }
 
   public function validateMember($firstName, $lastName, $expiryDate) {
@@ -194,6 +248,17 @@ class Members {
       return "Date is invalid";
     } 
 
+  }
+
+  public function setPaginationDefaults() {
+    $_SESSION['currentPage'] = 1;
+    $_SESSION['firstRow'] = 0;
+    $_SESSION["lastRow"] = 5;
+    // unset($_SESSION['lastPage']);
+    if ($_SESSION['totalRows'] <= 5) {
+      $_SESSION['lastRow'] = $_SESSION['totalRows'] - 1;
+    } 
+    $_SESSION['lastPage'] = ceil($_SESSION['totalRows'] / 5);
   }
 
 }

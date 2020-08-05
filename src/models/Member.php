@@ -19,6 +19,7 @@ class Member extends Database {
 
     $stmt = $this->connect()->prepare($query);
     $stmt->execute([$firstName, $lastName, $expiryDate]);
+    return $stmt->rowCount();
   }
 
   public function deleteMember($id) {
