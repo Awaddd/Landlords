@@ -32,14 +32,18 @@ for ($i = $_SESSION['firstRow']; $i < $_SESSION['lastRow']; $i++) :
         <input class="btn" type="submit" name="delete" value="Delete">
       </form>
 
+      <a class="btn link-btn" href="<?= URLROOT . "/members/" . $member->id ?>">View</a>
+
     </div>
   </div>
 
 <?php endfor; ?>
 
-  <form method="post" action="<?php htmlentities($_SERVER['PHP_SELF']); ?>">
-    <input class="btn" type="submit" value="Previous" name="prev_page">
-  </form>
-  <form method="post" action="<?php htmlentities($_SERVER['PHP_SELF']); ?>">
-    <input class="btn" type="submit" value="Next" name="next_page">
-  </form>
+  <div class="pagination-controls">
+    <form method="post" action="<?php htmlentities($_SERVER['PHP_SELF']); ?>">
+      <input class="btn" type="submit" value="Previous" name="prev_page">
+    </form>
+    <form method="post" action="<?php htmlentities($_SERVER['PHP_SELF']); ?>">
+      <input class="btn" type="submit" value="Next" name="next_page">
+    </form>
+  </div>

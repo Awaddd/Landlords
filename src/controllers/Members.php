@@ -96,7 +96,19 @@ class Members {
 
     }
 
-    require_once APPROOT . '/views/members/manageMembers.php';
+
+    $actualUrl = explode('/', $_SERVER['REQUEST_URI']);
+    if(array_key_exists(3, $actualUrl)) {
+      if (!empty($actualUrl[3])) {
+        $id = $actualUrl[3];
+        $data['member'] = $this->memberModel->getMemberById($id);
+        require_once APPROOT . '/views/members/showSingleMember.php';
+      } else {
+        require_once APPROOT . '/views/members/manageMembers.php';
+      }
+    } else {
+      require_once APPROOT . '/views/members/manageMembers.php';
+    }
   
   }
 

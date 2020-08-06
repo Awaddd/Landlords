@@ -19,12 +19,15 @@ class Api {
     $actualUrl = explode('/', $_SERVER['REQUEST_URI']);
 
     // if user passed in an ID in the url, find a member with that ID. 4 represents the position of the parameter in the URL
-    if (array_key_exists(4, $actualUrl)) {
-      $param = $actualUrl[4];
-      $member = $this->findOneMember($param);
-    } elseif (array_key_exists(3, $actualUrl)) {
+ 
+    if (array_key_exists(3, $actualUrl)) {
       $rowAndCount = $this->memberModel->getAllMembers();
       $member = $rowAndCount[0];
+    } 
+    
+    if (!empty($actualUrl[4])) {
+      $param = $actualUrl[4];
+      $member = $this->memberModel->getMemberById($param);
     }
 
     if (empty($member)) {
@@ -33,10 +36,6 @@ class Api {
       echo json_encode($member);
     }
 
-  }
-
-  public function findOneMember($id) {
-    return $this->memberModel->getMemberById($id);
   }
 
 }

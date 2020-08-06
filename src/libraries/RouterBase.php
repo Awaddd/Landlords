@@ -29,11 +29,14 @@ class RouterBase {
       $url = $_GET['url'];
 
       $actualUrl = explode('/', $_SERVER['REQUEST_URI']);
-      if (array_key_exists(3, $actualUrl)) {
-        $endpoint = $actualUrl[3];
-        $url = $url . '/' . $endpoint;
+
+      if ($url == 'api') {
+        if (array_key_exists(3, $actualUrl)) {
+          $endpoint = $actualUrl[3];
+          $url = $url . '/' . $endpoint;
+        }
       }
-      
+     
 
       if (in_array($url, self::$protectedRoutes)){
         if (!isset($_SESSION['user'])) {
