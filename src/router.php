@@ -4,6 +4,7 @@ use app\libraries\RouterBase as RouterBase;
 use app\controllers\Home as HomeController;
 use app\controllers\Members as MemberController;
 use app\controllers\User as UserController;
+use app\controllers\Api as ApiController;
 
 RouterBase::setRoutes(['', 'register', 'login', 'logout']);
 RouterBase::setProtectedRoutes(['members']);
@@ -37,5 +38,6 @@ RouterBase::set('logout', function() {
 // Requests to the API
 
 RouterBase::set('api/members', function() {
-  echo 'inside: api/members';
+  $api = new ApiController();
+  $api->index();
 });

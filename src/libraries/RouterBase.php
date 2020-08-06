@@ -28,12 +28,12 @@ class RouterBase {
       
       $url = $_GET['url'];
 
-      $param = explode('/', $_SERVER['REQUEST_URI']);
-      if (array_key_exists(3, $param)) {
-        $param = $param[3];
-        $url = $url . '/' . $param;
+      $actualUrl = explode('/', $_SERVER['REQUEST_URI']);
+      if (array_key_exists(3, $actualUrl)) {
+        $endpoint = $actualUrl[3];
+        $url = $url . '/' . $endpoint;
       }
-
+      
 
       if (in_array($url, self::$protectedRoutes)){
         if (!isset($_SESSION['user'])) {
@@ -50,8 +50,6 @@ class RouterBase {
     }
 
     if ($url == $route) {
-
-
 
       if($allowInvoke == true) {
         $callback->__invoke();

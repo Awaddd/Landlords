@@ -12,6 +12,14 @@ class Member extends Database {
     return array($row, $stmt->rowCount());
   }
 
+  public function getMemberById($id) {
+    $query = "SELECT * FROM members WHERE id = ?";
+    $stmt = $this->connect()->prepare($query);
+    $stmt->execute([$id]);
+    $row = $stmt->fetch();
+    return $row;
+  }
+
   public function setMember($firstName, $lastName, $expiryDate) {
     $query = "INSERT INTO 
     members(first_name, last_name, expiry_date) 
