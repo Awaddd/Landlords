@@ -7,6 +7,7 @@ use app\controllers\User as UserController;
 
 RouterBase::setRoutes(['', 'register', 'login', 'logout']);
 RouterBase::setProtectedRoutes(['members']);
+RouterBase::setApiEndpoints(['api/members']);
 
 RouterBase::set('', function() {
   $homeController = new HomeController();
@@ -33,3 +34,8 @@ RouterBase::set('logout', function() {
 });
 
 
+// Requests to the API
+
+RouterBase::set('api/members', function() {
+  echo 'inside: api/members';
+});
