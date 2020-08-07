@@ -1,12 +1,12 @@
 <?php
 
 namespace app\controllers;
-use app\models\User as UserModel;
+use app\models\Admin as AdminModel;
 
-class User {
+class Admins {
 
   public function __construct() {
-    $this->userModel = new UserModel();
+    $this->adminModel = new AdminModel();
   }
 
   public function register() {
@@ -18,44 +18,18 @@ class User {
       $password = trim($post['password']);
       $confirmPassword = trim($post['confirm_password']);
 
-      $addressLine1 = trim($post['address_line_1']);
-      $city = trim($post['city']);
-      $postCode = trim($post['post_code']);
-
-      if (isset($post['address_line_2'])) {
-        $addressLine2 = trim($post['address_line_2']);
-      }
-
-      if (isset($post['address_line_3'])) {
-        $addressLine3 = trim($post['address_line_3']);
-      }
-
-      // echo '<p>ad3 '. $addressLine3 . ', city: ' . $city .', postcode: '.$postCode.'</p>';
-      // echo '<p> '. $addressLine1 . ' ' . $addressLine2 . ' ' . $addressLine3 . ' ' . $city . ' ' . $postCode .' </p>';
-
-      $data['errorMessage'] = $this->validateRegister($username, $password, $confirmPassword, $addressLine1, $city, $postCode);
-      // if (!isset($data['errorMessage'])) {
-      //   $data['errorMessage'] = $this->verifyAddress($addressLine1, $addressLine2, $addressLine3, $city, $postCode);
-      // }
+      $data['errorMessage'] = $this->validateRegister($username, $password, $confirmPassword);
+      
       if (!isset($data['errorMessage'])) {
-        
         $password = password_hash($password, PASSWORD_DEFAULT);
-        $params = [$username, $password, $addressLine1, $city, $postCode];
-        if (isset($addressLine2)) {
-          array_push($params, $addressLine2);
-        }
-        if (isset($addressLine2)) {
-          array_push($params, $addressLine2);
-        }
-
-        $this->userModel->setUser(...$params);
+        $this->AdminModel->setUser($username, $password);
         
-        // $_SESSION['user'] = $this->userModel->getUser($username);
-        // header("Location: " . URLROOT . '/members');
+        $_SESSION['user'] = $this->AdminModel->getUser($username);
+        header("Location: " . URLROOT . '/members');
       }
     }
 
-    require_once APPROOT . '/views/auth/user/register.php';
+    require_once APPROOT . '/views/auth/admin/register.php';
   }
 
   public function login() {
@@ -65,7 +39,7 @@ class User {
       $username = trim($post['username']);
       $password = trim($post['password']);
 
-      $user = $this->userModel->getUser($username);
+      $user = $this->adminModel->getUser($username);
 
       $data['errorMessage'] = $this->validateLogin($username, $password, $user);
       
@@ -76,7 +50,7 @@ class User {
 
     }
 
-    require_once APPROOT . '/views/auth/user/login.php';
+    require_once APPROOT . '/views/auth/admin/login.php';
   }
 
   public function logout() {
@@ -85,7 +59,7 @@ class User {
     header("Location: " . URLROOT);
   }
 
-  public function validateRegister($username, $password, $confirmPassword, $addressLine1, $city, $postCode) {
+  public function validateRegister($username, $password, $confirmPassword) {
 
     if (empty($username)) {
       return "Username cannot be blank";
@@ -100,7 +74,7 @@ class User {
       return 'Username is too short';
     } 
 
-    $isTaken = $this->userModel->getUser($username);
+    $isTaken = $this->AdminModel->getUser($username);
     if (isset($isTaken)) {
       return 'Username is taken';
     }
@@ -112,19 +86,6 @@ class User {
     if($password != $confirmPassword) {
       return 'Passwords do not match';
     } 
-
-    if (empty($addressLine1)) {
-      return "Address Line 1 cannot be blank";
-    } 
-    
-    if (empty($city)) {
-      return "City cannot be blank";
-    } 
-    
-    if (empty($postCode)) {
-      return "Post Code cannot be blank";
-    } 
-  
   }
 
   public function validateLogin($username, $password, $user) {
@@ -142,10 +103,6 @@ class User {
     if (!password_verify($password, $user->password)) {
       return "Incorrect password";
     } 
-  }
-
-  public function verifyAddress($addressLine1, $addressLine2, $addressLine3, $city, $postCode) {
-    
   }
 
 }

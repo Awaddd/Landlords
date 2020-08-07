@@ -56,6 +56,7 @@ EOD;
 $pdf->Write(0, $txt, '', 0, 'C', true, 0, false, false, 0);
 
 // ---------------------------------------------------------
+$filename = $data['member']->id .'_' .$data['member']->first_name .'_' .$data['member']->last_name .'.pdf';
 
 //Close and output PDF document
-$pdf->Output('example_002.pdf', 'I');
+$pdf->Output($filename, 'I');

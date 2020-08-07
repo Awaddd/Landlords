@@ -25,6 +25,8 @@ class RouterBase {
     $url = '';
 
     if (isset($_GET['url'])){
+
+
       
       $url = $_GET['url'];
 
@@ -36,12 +38,21 @@ class RouterBase {
           $url = $url . '/' . $endpoint;
         }
       }
+
+      if ($url == 'admin') {
+        if (array_key_exists(3, $actualUrl)) {
+          $endpoint = $actualUrl[3];
+          $url = $url . '/' . $endpoint;
+          // echo '<p style="color: green;">'.$route.'</p>';
+          // echo '<p style="color: blue;">'.$url.'</p>';
+        }
+      }
      
 
       if (in_array($url, self::$protectedRoutes)){
         if (!isset($_SESSION['user'])) {
           $allowInvoke = false;
-          header("Location: " . URLROOT . '/login');
+          header("Location: " . URLROOT . '/admin/login');
         }
       } elseif (in_array($url, self::$apiEndpoints)) {
 

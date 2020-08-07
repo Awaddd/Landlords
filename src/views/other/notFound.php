@@ -2,7 +2,7 @@
 
 <?php
 
-if (!$data['message']) : ?>
+if (!isset($data['message'])) : ?>
 <p>PAGE NOT FOUND</p>
 <?php else: ?>
 <p><?= $data['message'] ?></p>
