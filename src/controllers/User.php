@@ -34,9 +34,10 @@ class User {
       // echo '<p> '. $addressLine1 . ' ' . $addressLine2 . ' ' . $addressLine3 . ' ' . $city . ' ' . $postCode .' </p>';
 
       $data['errorMessage'] = $this->validateRegister($username, $password, $confirmPassword, $addressLine1, $city, $postCode);
-      // if (!isset($data['errorMessage'])) {
-      //   $data['errorMessage'] = $this->verifyAddress($addressLine1, $addressLine2, $addressLine3, $city, $postCode);
-      // }
+      if (!isset($data['errorMessage'])) {
+        $response = $this->verifyAddress($addressLine1, $addressLine2, $addressLine3, $city, $postCode);
+        echo '<p>verify address:  ' . $response.'</p>';
+      }
       if (!isset($data['errorMessage'])) {
         
         $password = password_hash($password, PASSWORD_DEFAULT);
@@ -51,13 +52,13 @@ class User {
         array_push($address, $city);
         array_push($address, $postCode);
 
-        $insertId = $this->userModel->setAddress(...$address);
-        var_dump($insertId);
-        array_push($userDetails, $insertId);
-        $this->userModel->setUser(...$userDetails);
+        // $insertId = $this->userModel->setAddress(...$address);
+        // var_dump($insertId);
+        // array_push($userDetails, $insertId);
+        // $this->userModel->setUser(...$userDetails);
         
-        $_SESSION['user'] = $this->userModel->getUser($username);
-        header("Location: " . URLROOT . '/members');
+        // $_SESSION['user'] = $this->userModel->getUser($username);
+        // header("Location: " . URLROOT . '/members');
       }
     }
 
@@ -150,8 +151,23 @@ class User {
     } 
   }
 
-  public function verifyAddress($addressLine1, $addressLine2, $addressLine3, $city, $postCode) {
-    
+  public function verifyAddress($addressLine1, $addressLine2, $addressLine3, $city, $postCode) { 
+    $query = $addressLine1 . ', ' . $addressLine2 . ', ' . $addressLine3 . ', ' . $city . ', ' . $postCode;
+    // $query = str_replace(' ', '%', $query);
+    echo "<p>".$query."</p>";
+    $response = file_get_contents('https://api.addressy.com/Capture/Interactive/Find/v1.10/json3.ws?Key='. urlencode(API_KEY) .'&Text=' . urlencode($query));
+    $response = json_decode($response);
+
+    var_dump($response);
+
+    foreach ($response->Items as $k => $address) {
+      echo '<p style="color: green">'.$address->Id.'</p>';
+      echo '<p style="color: blue">'.$address->Description.'</p>';
+      echo '<p style="color: red">'.$address->Type.'</p>';
+      echo '<p style="color: pink">'.$address->Text.'</p>';
+    }
+
+
   }
 
 }
