@@ -40,18 +40,24 @@ class User {
       if (!isset($data['errorMessage'])) {
         
         $password = password_hash($password, PASSWORD_DEFAULT);
-        $params = [$username, $password, $addressLine1, $city, $postCode];
+        $userDetails = [$username, $password];
+        $address = [$addressLine1];
         if (isset($addressLine2)) {
-          array_push($params, $addressLine2);
+          array_push($address, $addressLine2);
         }
-        if (isset($addressLine2)) {
-          array_push($params, $addressLine2);
+        if (isset($addressLine3)) {
+          array_push($address, $addressLine3);
         }
+        array_push($address, $city);
+        array_push($address, $postCode);
 
-        $this->userModel->setUser(...$params);
+        $insertId = $this->userModel->setAddress(...$address);
+        var_dump($insertId);
+        array_push($userDetails, $insertId);
+        $this->userModel->setUser(...$userDetails);
         
-        // $_SESSION['user'] = $this->userModel->getUser($username);
-        // header("Location: " . URLROOT . '/members');
+        $_SESSION['user'] = $this->userModel->getUser($username);
+        header("Location: " . URLROOT . '/members');
       }
     }
 
