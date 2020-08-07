@@ -36,17 +36,17 @@ class User {
       $data['errorMessage'] = $this->validateRegister($username, $password, $confirmPassword, $addressLine1, $city, $postCode);
       if (!isset($data['errorMessage'])) {
         $response = $this->verifyAddress($addressLine1, $addressLine2, $addressLine3, $city, $postCode);
-        echo '<p>verify address:  ' . $response.'</p>';
+        echo '<p>verify address:  ' . $response->Text. ', ' . $response->Description . '</p>';
       }
       if (!isset($data['errorMessage'])) {
         
         $password = password_hash($password, PASSWORD_DEFAULT);
         $userDetails = [$username, $password];
         $address = [$addressLine1];
-        if (isset($addressLine2)) {
+        if (!empty($addressLine2)) {
           array_push($address, $addressLine2);
         }
-        if (isset($addressLine3)) {
+        if (!empty($addressLine3)) {
           array_push($address, $addressLine3);
         }
         array_push($address, $city);
@@ -154,19 +154,31 @@ class User {
   public function verifyAddress($addressLine1, $addressLine2, $addressLine3, $city, $postCode) { 
     $query = $addressLine1 . ', ' . $addressLine2 . ', ' . $addressLine3 . ', ' . $city . ', ' . $postCode;
     // $query = str_replace(' ', '%', $query);
-    echo "<p>".$query."</p>";
+    $arr = [$postCode, $addressLine1, $city];
+
+    if (!empty($addressLine2)) {
+      array_push($arr, $addressLine2);
+    }
+    if (!empty($addressLine3)) {
+      array_push($arr, $addressLine3);
+    }
+    
+    $query = implode(", ", $arr);
+    var_dump($query);
+
     $response = file_get_contents('https://api.addressy.com/Capture/Interactive/Find/v1.10/json3.ws?Key='. urlencode(API_KEY) .'&Text=' . urlencode($query));
     $response = json_decode($response);
 
-    var_dump($response);
+    // var_dump($response);
+    $address = array();
 
     foreach ($response->Items as $k => $address) {
       echo '<p style="color: green">'.$address->Id.'</p>';
       echo '<p style="color: blue">'.$address->Description.'</p>';
       echo '<p style="color: red">'.$address->Type.'</p>';
       echo '<p style="color: pink">'.$address->Text.'</p>';
+      return $address;
     }
-
 
   }
 
