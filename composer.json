@@ -3,5 +3,8 @@
     "psr-4": {
       "app\\": "src/"
     }
+  },
+  "require": {
+    "tecnickcom/tcpdf": "^6.2.13"
   }
 }

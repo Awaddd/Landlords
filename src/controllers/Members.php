@@ -98,11 +98,31 @@ class Members {
 
 
     $actualUrl = explode('/', $_SERVER['REQUEST_URI']);
-    if(array_key_exists(3, $actualUrl)) {
+    
+    if (array_key_exists(4, $actualUrl)) {
+      $id = $actualUrl[3];
+      $data['member'] = $this->memberModel->getMemberById($id);
+      if (!empty($actualUrl[4]) && $actualUrl[4] == 'pdf' && !empty($data['member'])) {
+        require_once(APPROOT . '/helpers/generatePDF.php');
+      } elseif ($actualUrl[4] != "pdf" && $actualUrl[4] != '') {
+        header("Location: " . URLROOT . '/members/' . $data['member']->id);
+      } elseif (empty($data['member'])) {
+        $data['message'] = 'Member does not exist';
+        require_once APPROOT . '/views/other/notFound.php';
+      } else {
+        require_once APPROOT . '/views/members/showSingleMember.php';
+      }
+    }
+    elseif(array_key_exists(3, $actualUrl)) {
       if (!empty($actualUrl[3])) {
         $id = $actualUrl[3];
         $data['member'] = $this->memberModel->getMemberById($id);
-        require_once APPROOT . '/views/members/showSingleMember.php';
+        if ($data['member']) {
+          require_once APPROOT . '/views/members/showSingleMember.php';
+        } else {
+          $data['message'] = 'Member does not exist';
+          require_once APPROOT . '/views/other/notFound.php';
+        }
       } else {
         require_once APPROOT . '/views/members/manageMembers.php';
       }
