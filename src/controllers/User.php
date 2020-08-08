@@ -166,10 +166,24 @@ class User {
     $query = implode(", ", $arr);
     var_dump($query);
 
-    $response = file_get_contents('https://api.addressy.com/Capture/Interactive/Find/v1.10/json3.ws?Key='. urlencode(API_KEY) .'&Text=' . urlencode($query));
-    $response = json_decode($response);
+    $reqUrl = 'https://api.addressy.com/Capture/Interactive/Find/v1.10/json3.ws?Key='. urlencode(API_KEY) .'&Text=' . urlencode($query);
 
-    // var_dump($response);
+    // $response = file_get_contents($reqUrl);
+    $handler = curl_init();
+
+    $options = [
+      CURLOPT_URL => $reqUrl,
+      CURLOPT_RETURNTRANSFER => true
+    ];
+
+    curl_setopt_array($handler, $options);
+    $response = curl_exec($handler);
+
+    curl_close($handler);
+    
+    $response = json_decode($response);
+    var_dump($response);
+
     $address = array();
 
     foreach ($response->Items as $k => $address) {
