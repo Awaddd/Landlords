@@ -184,8 +184,6 @@ class User {
     $response = json_decode($response);
     var_dump($response);
 
-    $address = array();
-
     foreach ($response->Items as $k => $address) {
       echo '<p style="color: green">'.$address->Id.'</p>';
       echo '<p style="color: blue">'.$address->Description.'</p>';
