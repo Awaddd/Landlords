@@ -12,6 +12,46 @@ class User {
   public function register() {
     $post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
+    if (isset($post['address'])) {
+      $response = $this->retrieveAddress($post['address']);
+      echo json_encode($response);
+      return;
+    }
+
+    if(isset($post['post_code'])) {
+      
+      $postCode = trim($post['post_code']);
+
+      $response = $this->verifyAddress($postCode);
+
+      $data["address"] = array();
+
+      foreach ($response->Items as $k => $a) {
+        // $addressArray = array();
+
+        // $description = explode(",", $a->Description);
+        // $addressLine3 = $description[0];
+        // $postCode = $description[1];
+
+        $text = explode(",", $a->Text);
+        $addressLine1 = $text[0] . ", " . $text[1];
+        // $addressLine2 = $text[2];
+
+        $address = array();
+
+        $address["addressLine1"] = $addressLine1;
+        // $address["addressLine2"] = $addressLine2;
+        // $address["addressLine3"] = $addressLine3;
+        // $address["post_code"] = $postCode;
+        $address["id"] = $a->Id;
+
+        array_push($data["address"], $address);
+        $data["post_code"] = $postCode;
+
+      }
+    }
+
+
     if(isset($post['register'])) {
       
       $username = trim($post['username']);
@@ -20,7 +60,7 @@ class User {
 
       $addressLine1 = trim($post['address_line_1']);
       $city = trim($post['city']);
-      $postCode = trim($post['post_code']);
+      $postCode = trim($post['actual_post_code']);
 
       if (isset($post['address_line_2'])) {
         $addressLine2 = trim($post['address_line_2']);
@@ -33,10 +73,12 @@ class User {
       // echo '<p>ad3 '. $addressLine3 . ', city: ' . $city .', postcode: '.$postCode.'</p>';
       // echo '<p> '. $addressLine1 . ' ' . $addressLine2 . ' ' . $addressLine3 . ' ' . $city . ' ' . $postCode .' </p>';
 
+      // $data['errorMessage'] = $this->validateRegister($username, $password, $confirmPassword, $postCode);
       $data['errorMessage'] = $this->validateRegister($username, $password, $confirmPassword, $addressLine1, $city, $postCode);
       if (!isset($data['errorMessage'])) {
-        $response = $this->verifyAddress($addressLine1, $addressLine2, $addressLine3, $city, $postCode);
-        echo '<p>verify address:  ' . $response->Text. ', ' . $response->Description . '</p>';
+
+        // where verify address was before
+
       }
       if (!isset($data['errorMessage'])) {
         
@@ -52,13 +94,13 @@ class User {
         array_push($address, $city);
         array_push($address, $postCode);
 
-        // $insertId = $this->userModel->setAddress(...$address);
+        $insertId = $this->userModel->setAddress(...$address);
         // var_dump($insertId);
-        // array_push($userDetails, $insertId);
-        // $this->userModel->setUser(...$userDetails);
+        array_push($userDetails, $insertId);
+        $this->userModel->setUser(...$userDetails);
         
-        // $_SESSION['user'] = $this->userModel->getUser($username);
-        // header("Location: " . URLROOT . '/members');
+        $_SESSION['user'] = $this->userModel->getUser($username);
+        header("Location: " . URLROOT . '/members');
       }
     }
 
@@ -92,7 +134,8 @@ class User {
     header("Location: " . URLROOT);
   }
 
-  public function validateRegister($username, $password, $confirmPassword, $addressLine1, $city, $postCode) {
+  // public function validateRegister($username, $password, $confirmPassword, $postCode) {
+    public function validateRegister($username, $password, $confirmPassword, $addressLine1, $city, $postCode) {
 
     if (empty($username)) {
       return "Username cannot be blank";
@@ -151,24 +194,15 @@ class User {
     } 
   }
 
-  public function verifyAddress($addressLine1, $addressLine2, $addressLine3, $city, $postCode) { 
-    $query = $addressLine1 . ', ' . $addressLine2 . ', ' . $addressLine3 . ', ' . $city . ', ' . $postCode;
-    // $query = str_replace(' ', '%', $query);
-    $arr = [$postCode, $addressLine1, $city];
+  public function verifyAddress($postCode) { 
+    // $query = $addressLine1 . ', ' . $addressLine2 . ', ' . $addressLine3 . ', ' . $city . ', ' . $postCode;
+    $query = $postCode;
+    // $arr = [$postCode];
 
-    if (!empty($addressLine2)) {
-      array_push($arr, $addressLine2);
-    }
-    if (!empty($addressLine3)) {
-      array_push($arr, $addressLine3);
-    }
-    
-    $query = implode(", ", $arr);
-    var_dump($query);
+    // $query = implode(", ", $arr);
 
     $reqUrl = 'https://api.addressy.com/Capture/Interactive/Find/v1.10/json3.ws?Key='. urlencode(API_KEY) .'&Text=' . urlencode($query);
 
-    // $response = file_get_contents($reqUrl);
     $handler = curl_init();
 
     $options = [
@@ -182,16 +216,57 @@ class User {
     curl_close($handler);
     
     $response = json_decode($response);
-    var_dump($response);
+    // var_dump($response);
 
     foreach ($response->Items as $k => $address) {
-      echo '<p style="color: green">'.$address->Id.'</p>';
-      echo '<p style="color: blue">'.$address->Description.'</p>';
-      echo '<p style="color: red">'.$address->Type.'</p>';
-      echo '<p style="color: pink">'.$address->Text.'</p>';
-      return $address;
+      // echo '<h2 style="color: green">'.$address->Id.'</h2>';
     }
 
+    // search using the same service, but this time pass in the returned address id as a container
+    $container = $address->Id;
+    // echo 'Container: <br>';
+    // var_dump($container);
+    // echo '<br>';
+
+    $reqUrl = 'https://api.addressy.com/Capture/Interactive/Find/v1.10/json3.ws?Key='. urlencode(API_KEY) .'&Text=' . urlencode($query) . '&Container=' . urlencode($container);
+
+    $handler = curl_init();
+    $options = [
+      CURLOPT_URL => $reqUrl,
+      CURLOPT_RETURNTRANSFER => true
+    ];
+
+    curl_setopt_array($handler, $options);
+    $response = curl_exec($handler);
+    curl_close($handler);
+    $response = json_decode($response);
+
+    // print_r($response->Items);
+    return $response;
+
+  }
+
+  public function retrieveAddress($id) {
+    // $reqUrl = 'https://api.addressy.com/Capture/Interactive/Retrieve/v1.00/json3.ws?Key=AA11-AA11-AA11-AA11&Id=GBR|52509479';
+    $reqUrl = 'https://api.addressy.com/Capture/Interactive/Retrieve/v1.00/json3.ws?Key='. urlencode(API_KEY) .'&id=' . urlencode($id);
+    $response = $this->getApi($reqUrl);
+    return $response;
+  }
+
+  public function getApi($reqUrl) {
+
+    $handler = curl_init();
+
+    $options = [
+      CURLOPT_URL => $reqUrl,
+      CURLOPT_RETURNTRANSFER => true
+    ];
+
+    curl_setopt_array($handler, $options);
+    $response = curl_exec($handler);
+    curl_close($handler);
+    return json_decode($response);
+    
   }
 
 }

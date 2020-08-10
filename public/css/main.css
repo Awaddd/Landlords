@@ -51,8 +51,7 @@ body {
   background-color: #e2e2e2;
 }
 
-
-input[type=text], input[type=date], input[type=password] {
+input[type=text], input[type=date], input[type=password], select {
   padding: 8px !important;
 }
 
